@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class FactionList
 {
-    private List<Faction> factions = new ArrayList<>();
+    private List<Faction> factions;
     private FactionDBHelper db;
 
 
@@ -20,6 +20,7 @@ public class FactionList
     public void load(Context context)
     {
         this.db = new FactionDBHelper(context);
+        this.factions = db.getAllFactions();
     }
 
     public int size()

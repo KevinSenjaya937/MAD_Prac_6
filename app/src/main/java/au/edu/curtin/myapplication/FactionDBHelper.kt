@@ -20,9 +20,9 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val createDB = ("CREATE TABLE " + TABLE_NAME + "("
-                + ID + "INTEGER PRIMARY KEY" + NAME + "TEXT,"
-                + STRENGTH + "INTEGER," + RELATIONSHIP + "INTEGER" + ")")
+        val createDB = ("CREATE TABLE " + TABLE_NAME + " ("
+                + ID + " INTEGER PRIMARY KEY, "  + NAME + " TEXT,"
+                + STRENGTH + " INTEGER," + RELATIONSHIP + " INTEGER" + ")")
         db?.execSQL(createDB)
     }
 
@@ -32,7 +32,7 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         onCreate(db)
     }
 
-    fun insertFaction(faction: Faction): Long {
+    fun insertFaction(faction: Faction) {
         val db = this.writableDatabase
 
         val contentValues = ContentValues()
@@ -41,18 +41,16 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         contentValues.put(STRENGTH, faction.strength)
         contentValues.put(RELATIONSHIP, faction.relationship)
 
-        val success = db.insert(FactionDBSchema.FactionTableInfo.TABLE_NAME, null, contentValues)
-        db.close()
-        return success
+        db.insert(TABLE_NAME, null, contentValues)
     }
 
     @SuppressLint("Range")
     fun getAllFactions(): ArrayList<Faction>{
-        val factionList: ArrayList<Faction> = ArrayList()
-        val selectQuery = "SELECT * FROM ${FactionDBSchema.FactionTableInfo.TABLE_NAME}"
+        val factionList: ArrayList<Faction> = ArrayList<Faction>()
+        val selectQuery = "SELECT * FROM $TABLE_NAME"
         val db = this.readableDatabase
 
-        val cursor: Cursor?
+        var cursor: Cursor? =null
 
         try {
             cursor = db.rawQuery(selectQuery, null)
@@ -69,10 +67,10 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         if (cursor.moveToFirst()) {
             do {
-                id = cursor.getInt(cursor.getColumnIndex("id"))
-                name = cursor.getString(cursor.getColumnIndex("name"))
-                strength = cursor.getInt(cursor.getColumnIndex("strength"))
-                relationship = cursor.getInt(cursor.getColumnIndex("relationship"))
+                id = cursor.getInt(cursor.getColumnIndex(ID))
+                name = cursor.getString(cursor.getColumnIndex(NAME))
+                strength = cursor.getInt(cursor.getColumnIndex(STRENGTH))
+                relationship = cursor.getInt(cursor.getColumnIndex(RELATIONSHIP))
 
                 val faction = Faction(id,name,strength,relationship)
                 factionList.add(faction)
@@ -81,7 +79,7 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         return factionList
     }
 
-    fun updateFaction(faction: Faction): Int {
+    fun updateFaction(faction: Faction){
         val db = this.writableDatabase
 
         val contentValues = ContentValues()
@@ -90,20 +88,16 @@ class FactionDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         contentValues.put(STRENGTH, faction.strength)
         contentValues.put(RELATIONSHIP, faction.relationship)
 
-        val success = db.update(FactionDBSchema.FactionTableInfo.TABLE_NAME, contentValues, "id=" + faction.id, null)
-        db.close()
-        return success
+        db.update(TABLE_NAME, contentValues, "id=" + faction.id, null)
     }
 
-    fun deleteFaction(id: Int): Int {
+    fun deleteFaction(id: Int) {
         val db = this.writableDatabase
 
         val contentValues = ContentValues()
         contentValues.put(ID, id)
 
-        val success = db.delete(FactionDBSchema.FactionTableInfo.TABLE_NAME, "id="+id, null)
-        db.close()
-        return success
+        db.delete(TABLE_NAME, "id="+id, null)
     }
 
 }

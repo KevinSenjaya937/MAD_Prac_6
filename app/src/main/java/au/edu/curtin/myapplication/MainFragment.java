@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+
 public class MainFragment extends Fragment
 {
     private FactionList factionList;
@@ -219,6 +221,7 @@ public class MainFragment extends Fragment
 
     public class FactionAdapter extends RecyclerView.Adapter<FactionViewHolder>
     {
+
         @Override
         public FactionViewHolder onCreateViewHolder(ViewGroup container, int viewType)
         {
